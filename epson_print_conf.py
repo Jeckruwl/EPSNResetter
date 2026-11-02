@@ -1926,10 +1926,38 @@ class EpsonPrinter:
                 f"SNMP_DUMP {name}:\n"
                 f"  ADDRESS: {oid}"
             )
-            tag, result = self.fetch_oid_values(
+            response = self.fetch_oid_values(
                 oid, label="get_snmp_info " + name
-            )[0]
+            )
+            # A successful single-OID request normally returns a list with
+            # one (type, value) pair. Configuration overrides may return the
+            # pair directly, while SNMP errors return (None, False). Normalize
+            # these shapes and skip unavailable OIDs instead of crashing.
+            if (
+                isinstance(response, tuple)
+                and len(response) == 2
+            ):
+                tag, result = response
+            elif isinstance(response, list) and response:
+                first_result = response[0]
+                if isinstance(first_result, (tuple, list)) and len(first_result) == 2:
+                    tag, result = first_result
+                else:
+                    logging.info(
+                        "No usable SNMP response for '%s' (OID %s).",
+                        name, oid
+                    )
+                    continue
+            else:
+                logging.info(
+                    "No SNMP response for '%s' (OID %s).",
+                    name, oid
+                )
+                continue
+
             logging.debug("  TAG: %s\n  RESPONSE: %s", tag, repr(result))
+            if tag is None or result is None or result is False:
+                continue
 
             if name == "Power Off Timer" and result and result.find(
                     b'@BDC PS\r\not:01') > 0:
