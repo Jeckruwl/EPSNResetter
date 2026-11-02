@@ -1,7 +1,23 @@
 # -*- mode: python ; coding: utf-8 -*-
 """PyInstaller specification for a standalone macOS .app bundle."""
 
+from pathlib import Path
+import sysconfig
+
 from PyInstaller.utils.hooks import collect_all, collect_submodules
+
+
+def discover_mypyc_extensions():
+    """Include hashed mypyc runtime modules required by compiled wheels."""
+    module_names = set()
+    site_packages = {
+        sysconfig.get_paths().get("purelib"),
+        sysconfig.get_paths().get("platlib"),
+    }
+    for directory in filter(None, site_packages):
+        for extension in Path(directory).glob("*__mypyc*.so"):
+            module_names.add(extension.name.split(".", 1)[0])
+    return sorted(module_names)
 
 
 black_datas, black_binaries, black_hiddenimports = collect_all("black")
@@ -20,6 +36,7 @@ hiddenimports = (
     + collect_submodules("pysnmp")
     + collect_submodules("pysnmp_sync_adapter")
     + collect_submodules("tkcalendar")
+    + discover_mypyc_extensions()
 )
 
 a = Analysis(

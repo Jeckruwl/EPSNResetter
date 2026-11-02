@@ -5,7 +5,13 @@ import re
 import xml.etree.ElementTree as ET
 import itertools
 import textwrap
-import tomli
+
+# Use the standard-library TOML parser on Python 3.11+; keep tomli as a
+# fallback for older Python versions.
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 
 from epson_print_conf import get_printer_models, EpsonPrinter
 
@@ -383,7 +389,7 @@ def generate_config_from_toml(
 
     try:
         with open(config, mode="rb") as fp:
-            parsed_toml = tomli.load(fp)
+            parsed_toml = tomllib.load(fp)
     except Exception as e:
         logging.error("Invalid TOML file - %s", e)
         return {}
