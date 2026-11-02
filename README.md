@@ -64,7 +64,7 @@ Note on the ink waste counter reset feature: resetting the ink waste counter is 
 
 ## macOS Big Sur: standalone desktop app (no Docker/VNC)
 
-A native `.app` bundle can be built with the dedicated PyInstaller spec. The finished app runs as a normal desktop application: it does not start a localhost web server and does not need Docker or a VNC client. The printer still needs to be reachable on the same network.
+A native `.app` bundle can be built with the dedicated PyInstaller spec. The finished app runs as a normal desktop application: it does not start a localhost web server and does not need Docker or a VNC client. The bundle includes the repository's XP-520 configuration and selects that model by default, but leaves the IP field blank rather than reusing the sample device address. The printer still needs to be reachable on the same network.
 
 To build it on a Mac (Python 3.11 with Tkinter available):
 

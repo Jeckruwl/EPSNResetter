@@ -40,10 +40,10 @@ hiddenimports = (
 )
 
 a = Analysis(
-    ["ui.py"],
+    ["macos_app.py"],
     pathex=[],
     binaries=black_binaries + babel_binaries,
-    datas=black_datas + babel_datas,
+    datas=[("epson_print_conf.pickle", ".")] + black_datas + babel_datas,
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
