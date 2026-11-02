@@ -1,0 +1,13 @@
+# Local Python environments
+.venv/
+.venv-*/
+venv/
+
+# PyInstaller output
+build/
+dist/
+*.spec.bak
+
+# macOS build intermediates
+__pycache__/
+.DS_Store

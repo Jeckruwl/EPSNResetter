@@ -62,7 +62,23 @@ The software also includes a configurable printer dictionary, which can be easil
 
 Note on the ink waste counter reset feature: resetting the ink waste counter is just removing a lock; not replacing the tank will reduce the print quality and make the ink spill.
 
-## Install-2-go (macOS)
+## macOS Big Sur: standalone desktop app (no Docker/VNC)
+
+A native `.app` bundle can be built with the dedicated PyInstaller spec. The finished app runs as a normal desktop application: it does not start a localhost web server and does not need Docker or a VNC client. The printer still needs to be reachable on the same network.
+
+To build it on a Mac (Python 3.11 with Tkinter available):
+
+```bash
+./scripts/build_macos.sh
+```
+
+The app and ZIP archive are written to `dist/macos/`. The build targets macOS 11 (Big Sur) and the CPU architecture of the Mac that builds it (`arm64` or `x86_64`). The GitHub Actions workflow uses an Intel runner and creates the `x86_64` build. For a 2018 Intel Mac, use that artifact or build locally with the script above. PyInstaller does not produce a macOS app when run on Linux or Windows.
+
+The generated app is currently unsigned. macOS may show a Gatekeeper warning when opening an app downloaded from the internet; seamless distribution requires signing and notarization with an Apple Developer ID.
+
+The Docker/VNC instructions below are the legacy remote-desktop option; they are not required for the standalone app.
+
+## Install-2-go (macOS, legacy Docker/VNC)
 Prerequirements: Docker, TigerVNC
 
 ### 1. Install Tiger VNC Viewer

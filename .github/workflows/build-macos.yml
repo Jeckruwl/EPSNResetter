@@ -1,0 +1,31 @@
+name: Build macOS app
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # Build natively on a GitHub-hosted Mac; the app's minimum OS is set to Big Sur.
+    runs-on: macos-15-intel
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build standalone app
+        run: ./scripts/build_macos.sh
+
+      - name: Upload app archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: Epson-Printer-Configuration-macOS-${{ runner.arch }}
+          path: dist/macos/*.zip
+          if-no-files-found: error
+          retention-days: 14
