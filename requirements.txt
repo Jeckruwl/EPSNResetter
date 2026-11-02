@@ -1,0 +1,8 @@
+pyyaml
+pysnmp
+pysnmp_sync_adapter
+tkcalendar
+pyperclip
+black
+tomli
+text-console
